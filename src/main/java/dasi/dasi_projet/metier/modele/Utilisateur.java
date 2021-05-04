@@ -93,5 +93,21 @@ public class Utilisateur {
         this.telephone = telephone;
     }
     
+    // Constructors
+    
+    public Utilisateur () {
+        
+    }
+    
+    public Utilisateur (String first_name, String last_name, char gender,
+            String email, String pass, String phone) {
+        this.nom = last_name;
+        this.prenom = first_name;
+        this.genre = gender;
+        this.mail = email;
+        this.motdepasse = pass;
+        this.telephone = phone;
+    }
+    
     
 }

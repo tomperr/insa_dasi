@@ -10,7 +10,7 @@ import dasi.dasi_projet.metier.modele.Medium;
 import dasi.dasi_projet.metier.modele.ProfilAstral;
 import dasi.dasi_projet.metier.modele.Spirite;
 import dasi.dasi_projet.metier.modele.Utilisateur;
-import dasi.dasi_projet.metier.service.ServiceClient;
+import dasi.dasi_projet.metier.service.Service;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -78,24 +78,24 @@ public class Main {
         SimpleDateFormat sf = new SimpleDateFormat("dd/MM/yyyy");
         Date d = sf.parse(birth);
                 
-        ServiceClient serviceclient = new ServiceClient();
+        Service service = new Service();
         
-        Client client = new Client(d, address, last_name, first_name,
-            gender, email, pass, phone);
-        Client client_return = serviceclient.inscrireClient(client);
-        if (client_return == null) {
+        Client client = service.inscrireClient(first_name, last_name,
+                gender, email, pass, phone, birth, address); 
+    
+        if (client == null) {
             System.out.println("> Echec création");
         } else {
             System.out.println("> Succès création");
-            System.out.println(client_return);
+            System.out.println(client);
         }
     }
     
     public static void testerAuthentification() {
         String mail = Saisie.lireChaine("Mail : ");
         String pass = Saisie.lireChaine("Mot de passe : ");
-        ServiceClient serviceclient = new ServiceClient();
-        Utilisateur utilisateur = serviceclient.authentifierUtilisateur(
+        Service service = new Service();
+        Utilisateur utilisateur = service.authentifierUtilisateur(
                 mail, pass);
         
         if (utilisateur == null) {
@@ -115,12 +115,12 @@ public class Main {
         String pass = "password";
         String phone = "0642785689";
         
-        ServiceClient serviceClient = new ServiceClient();
+        Service service = new Service();
         
         Employe emp = new Employe(last_name, first_name, gender, email, pass,
                 phone, true);
         Employe emp_return;
-        emp_return = serviceClient.inscrireEmploye(emp);
+        emp_return = service.inscrireEmploye(emp);
         if (emp_return == null) {
             System.out.println("> Echec création");
         } else {
@@ -140,7 +140,7 @@ public class Main {
         String formation = "DUT Arnaqueur";
         
         int option = 0;
-        ServiceClient serviceClient = new ServiceClient();
+        Service service = new Service();
         
         while (option <= 0 || option > 3) {
             System.out.println("1 - Sprite");
@@ -153,7 +153,7 @@ public class Main {
                     Spirite spirite = new Spirite(denomination, genre,
                             presentation, support);
                     Spirite spirite_return;
-                    spirite_return = serviceClient.inscrireSpirite(spirite);
+                    spirite_return = service.inscrireSpirite(spirite);
                     if (spirite_return == null) {
                         System.out.println("> Echec création");
                     } else {
@@ -167,7 +167,7 @@ public class Main {
                     Cartomancien cartomancien = new Cartomancien(denomination, genre,
                             presentation);
                     Cartomancien cartomancien_return;
-                    cartomancien_return = serviceClient.inscrireCartomancien(cartomancien);
+                    cartomancien_return = service.inscrireCartomancien(cartomancien);
                     if (cartomancien_return == null) {
                         System.out.println("> Echec création");
                     } else {
@@ -180,7 +180,7 @@ public class Main {
                     Astrologue astrologue = new Astrologue(denomination, genre,
                             presentation, promotion, formation);
                     Astrologue astrologue_return;
-                    astrologue_return = serviceClient.inscrireAstrologue(astrologue);
+                    astrologue_return = service.inscrireAstrologue(astrologue);
                     if (astrologue_return == null) {
                         System.out.println("> Echec création");
                     } else {
@@ -200,14 +200,12 @@ public class Main {
     public static void testerCreationConsultation() {
         
         // getting an client
-        ServiceClient serviceclient = new ServiceClient();
-        Client client = (Client)serviceclient.authentifierUtilisateur("tom.perr@insa-lyon.fr", "password_hard");
+        Service service = new Service();
+        Client client = (Client)service.authentifierUtilisateur("tom.perr@insa-lyon.fr", "password_hard");
         
-        // getting a medium
-        ServiceClient serviceClient = new ServiceClient();
-        Medium medium = serviceClient.rechercherMediumParDenom("Laurine Pesquet");
+        Medium medium = service.rechercherMediumParDenom("Laurine Pesquet");
                
-        Consultation consultation_return = serviceclient.creerConsultation(client, medium);
+        Consultation consultation_return = service.demanderConsultation(client, medium);
         if (consultation_return == null) {
             System.out.println("> Echec création");
         } else {
@@ -219,29 +217,29 @@ public class Main {
     
     public static void testerCommencerConsultation() {
         long id_consultation = (long)Saisie.lireInteger("Id de la consultation : ");
-        ServiceClient serviceclient = new ServiceClient();
-        Consultation consultation = serviceclient.rechercherConsultation(id_consultation);
-        serviceclient.commencerConsultation(consultation);
+        Service service = new Service();
+        Consultation consultation = service.rechercherConsultation(id_consultation);
+        service.commencerConsultation(consultation);
     }
     
     public static void testerTerminerConsultation() {
         long id_consultation = (long)Saisie.lireInteger("Id de la consultation : ");
-        ServiceClient serviceclient = new ServiceClient();
-        Consultation consultation = serviceclient.rechercherConsultation(id_consultation);
+        Service service = new Service();
+        Consultation consultation = service.rechercherConsultation(id_consultation);
         String commentaire = "C'etait super !";
-        serviceclient.terminerConsultation(consultation, commentaire);
+        service.terminerConsultation(consultation, commentaire);
     }
     
     public static void testerRechercherMedium() {
         long id_medium = (long)Saisie.lireInteger("Id du medium : ");
-        ServiceClient serviceClient = new ServiceClient();
-        Medium medium = serviceClient.rechercherMediumParId(id_medium);
+        Service service = new Service();
+        Medium medium = service.rechercherMediumParId(id_medium);
         System.out.println(medium);
     }
     
     public static void testerRecupererTousMedium() {
-        ServiceClient serviceClient = new ServiceClient();
-        List<Medium> mediums = serviceClient.recupererTousMedium();
+        Service service = new Service();
+        List<Medium> mediums = service.recupererTousMedium();
         for (Medium m : mediums) {
             System.out.println(m);
         }
@@ -249,36 +247,36 @@ public class Main {
     
     public static void testerRechercherClient() {
         long id_client = (long)Saisie.lireInteger("Id du client : ");
-        ServiceClient serviceclient = new ServiceClient();
-        Client client = serviceclient.rechercherClient(id_client);
+        Service service = new Service();
+        Client client = service.rechercherClient(id_client);
         System.out.println(client);
     }
     
     public static void testerRechercherConsultation() {
         long id_consultation = (long)Saisie.lireInteger("Id de la consultation : ");
-        ServiceClient serviceclient = new ServiceClient();
-        Consultation consultation = serviceclient.rechercherConsultation(id_consultation);
+        Service service = new Service();
+        Consultation consultation = service.rechercherConsultation(id_consultation);
         System.out.println(consultation);
     }
     
     public static void testerGenererPredictions() throws IOException{
-        ServiceClient serviceclient = new ServiceClient();
-        Client client = (Client)serviceclient.authentifierUtilisateur("tom.perr@insa-lyon.fr", "password_hard");
+        Service service = new Service();
+        Client client = (Client)service.authentifierUtilisateur("tom.perr@insa-lyon.fr", "password_hard");
         ProfilAstral pf = client.getProfil_astral();
-        List<String> predictions = serviceclient.genererPredictions(pf.getCouleur(), pf.getAnimal(),
+        List<String> predictions = service.genererPredictions(pf.getCouleur(), pf.getAnimal(),
             1, 2, 1);
         System.out.println(predictions);
     }
     
     public static void testerGenererStatsConsultationsMediums() {
-        ServiceClient serviceClient = new ServiceClient();
-        Map<Medium, Integer> statsMediums = serviceClient.statistiquesMediumsConsultations();
+        Service service = new Service();
+        Map<Medium, Integer> statsMediums = service.statistiquesMediumsConsultations();
         System.out.println(statsMediums);
     }
     
     public static void testersGenererStatsTopMediums() {
-        ServiceClient serviceClient = new ServiceClient();
-        List<Medium> statsMediums = serviceClient.statistiquesTopMediums();
+        Service service = new Service();
+        List<Medium> statsMediums = service.statistiquesTopMediums();
         
         int count = 1;
         for (Medium med: statsMediums) {
@@ -292,14 +290,13 @@ public class Main {
         JpaUtil.init();
         
         // init data
-        ServiceClient serviceclient = new ServiceClient();
-        serviceclient.initialisationDonneesEmployes();
-        serviceclient.initialisationDonneesClients();
+        Service service = new Service();
+        service.initialisationDonneesEmployes();
+        service.initialisationDonneesClients();
         
         int option = -1;
         while (option != 0) {
             displayMenu();
-            //TODO: prompt
             option = Saisie.lireInteger("Choix : ");
             switch (option) {
                 case 0: break;

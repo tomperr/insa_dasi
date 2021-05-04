@@ -79,14 +79,9 @@ public class Client extends Utilisateur
 
     public Client(Date _date_naissance, String _adresse, String _nom, String _prenom,
             char _genre, String _mail, String _motdepasse, String _telephone) {
+        super(_prenom, _nom, _genre, _mail, _motdepasse, _telephone);
         this.date_naissance = _date_naissance;
         this.adresse = _adresse;
-        this.nom = _nom;
-        this.prenom = _prenom;
-        this.genre = _genre;
-        this.mail = _mail;
-        this.motdepasse = _motdepasse;
-        this.telephone = _telephone;
     }
     
     // METHODS

@@ -39,12 +39,11 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Comparator;
 
-
 /**
  *
  * @author tperrillat
  */
-public class ServiceClient {
+public class Service {
     
     public void initialisationDonneesClients() throws ParseException, IOException {
         
@@ -53,18 +52,26 @@ public class ServiceClient {
         // char _genre, String _mail, String _motdepasse, String _telephone
         SimpleDateFormat sf = new SimpleDateFormat("dd/MM/yyyy");
         
-        List<Client> clients = new ArrayList<Client>();
-        clients.add(new Client(sf.parse("08/03/2000"), "12 rue de l'INSA", "PERR", "Tom", 
-                'M', "tom.perr@insa-lyon.fr", "password_hard", "0645788956"));
-        clients.add(new Client(sf.parse("02/02/2001"), "33c rue des enfants", "EDOUARD", "Baptiste", 
-                'M', "baptiste.edouard@insa-lyon.fr", "edd_02022001", "0612562332"));
-        for (Client client : clients) {
-            inscrireClient(client);
-        }
-    }
+        inscrireClient("Tom", "PERR", 'M', "tom.perr@insa-lyon.fr",
+            "password_hard", "0645788956", "08/03/2000",
+            "12 rue de l'INSA");
         
-    public Client inscrireClient(Client client) throws IOException {
-           
+        inscrireClient("Baptiste", "EDOUARD", 'M', "baptiste.edouard@insa-lyon.fr",
+            "edd_02022001", "0612562332", "02/02/2001",
+            "33c rue des enfants");
+
+    }
+    
+    public Client inscrireClient(String first_name, String last_name,
+            char gender, String email, String pass, String phone, String birth,
+            String address) throws IOException, ParseException {
+   
+        SimpleDateFormat sf = new SimpleDateFormat("dd/MM/yyyy");
+        Date d = sf.parse(birth);
+        
+        Client client = new Client(d, address, last_name, first_name, gender,
+            email, pass, phone);
+        
         // generate profil astral
         AstroNetApi ana = new AstroNetApi();
         List<String> response = ana.getProfil(client.getPrenom(),
@@ -101,7 +108,7 @@ public class ServiceClient {
     }
     
     //public Consultation creerConsultation(Consultation consultation) {
-    public Consultation creerConsultation(Client client, Medium medium) {
+    public Consultation demanderConsultation(Client client, Medium medium) {
 
         Consultation consultation = new Consultation();
         consultation.setClient(client);

@@ -1,5 +1,4 @@
 D:\Home\Documents\INSA\3IF\S2\IF-3-DASI\Projet\CODE\DASI_Projet\src\main\java\dasi\dasi_projet\metier\modele\Spirite.java
-D:\Home\Documents\INSA\3IF\S2\IF-3-DASI\Projet\CODE\DASI_Projet\src\main\java\dasi\dasi_projet\metier\service\ServiceEmploye.java
 D:\Home\Documents\INSA\3IF\S2\IF-3-DASI\Projet\CODE\DASI_Projet\src\main\java\dasi\dasi_projet\metier\modele\Utilisateur.java
 D:\Home\Documents\INSA\3IF\S2\IF-3-DASI\Projet\CODE\DASI_Projet\src\main\java\dasi\dasi_projet\metier\service\Message.java
 D:\Home\Documents\INSA\3IF\S2\IF-3-DASI\Projet\CODE\DASI_Projet\src\main\java\dasi\dasi_projet\dao\ClientDao.java
@@ -11,11 +10,11 @@ D:\Home\Documents\INSA\3IF\S2\IF-3-DASI\Projet\CODE\DASI_Projet\src\main\java\da
 D:\Home\Documents\INSA\3IF\S2\IF-3-DASI\Projet\CODE\DASI_Projet\src\main\java\dasi\dasi_projet\metier\modele\Medium.java
 D:\Home\Documents\INSA\3IF\S2\IF-3-DASI\Projet\CODE\DASI_Projet\src\main\java\dasi\dasi_projet\metier\modele\Astrologue.java
 D:\Home\Documents\INSA\3IF\S2\IF-3-DASI\Projet\CODE\DASI_Projet\src\main\java\Main.java
-D:\Home\Documents\INSA\3IF\S2\IF-3-DASI\Projet\CODE\DASI_Projet\src\main\java\dasi\dasi_projet\metier\service\ServiceClient.java
 D:\Home\Documents\INSA\3IF\S2\IF-3-DASI\Projet\CODE\DASI_Projet\src\main\java\dasi\dasi_projet\dao\MediumDao.java
 D:\Home\Documents\INSA\3IF\S2\IF-3-DASI\Projet\CODE\DASI_Projet\src\main\java\dasi\dasi_projet\metier\modele\Cartomancien.java
 D:\Home\Documents\INSA\3IF\S2\IF-3-DASI\Projet\CODE\DASI_Projet\src\main\java\dasi\dasi_projet\dao\CartomancienDao.java
 D:\Home\Documents\INSA\3IF\S2\IF-3-DASI\Projet\CODE\DASI_Projet\src\main\java\dasi\dasi_projet\dao\AstrologueDao.java
+D:\Home\Documents\INSA\3IF\S2\IF-3-DASI\Projet\CODE\DASI_Projet\src\main\java\dasi\dasi_projet\metier\service\Service.java
 D:\Home\Documents\INSA\3IF\S2\IF-3-DASI\Projet\CODE\DASI_Projet\src\main\java\dasi\dasi_projet\ihm\console\Saisie.java
 D:\Home\Documents\INSA\3IF\S2\IF-3-DASI\Projet\CODE\DASI_Projet\src\main\java\dasi\dasi_projet\dao\SpiriteDao.java
 D:\Home\Documents\INSA\3IF\S2\IF-3-DASI\Projet\CODE\DASI_Projet\src\main\java\dasi\dasi_projet\dao\JpaUtil.java
