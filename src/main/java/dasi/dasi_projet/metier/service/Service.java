@@ -110,120 +110,140 @@ public class Service {
     //public Consultation creerConsultation(Consultation consultation) {
     public Consultation demanderConsultation(Client client, Medium medium) {
 
-        Consultation consultation = new Consultation();
-        consultation.setClient(client);
-        consultation.setMedium(medium);
+        Consultation consultation = null;
         
-        EmployeDao employeDao = new EmployeDao();        
-        ConsultationDao consultationDao = new ConsultationDao();
-        ClientDao clientDao = new ClientDao();
- 
-        try {
-            
-            JpaUtil.creerContextePersistance();
-            JpaUtil.ouvrirTransaction();
-            
-            char medium_gender = medium.getGenre();
-            
-            Employe emp = employeDao.chercherEmployeDispo(medium_gender);
-            
-            if (emp != null) {
+        if (client != null && medium != null) {
+        
+            consultation = new Consultation();
+            consultation.setClient(client);
+            consultation.setMedium(medium);
 
-                // add consultation to employee
-                emp.addConsultation(consultation);
-                emp.setDisponible(false);
-                employeDao.modifier(emp);
+            EmployeDao employeDao = new EmployeDao();        
+            ConsultationDao consultationDao = new ConsultationDao();
+            ClientDao clientDao = new ClientDao();
 
-                // add consultation to medium
-                MediumDao mediumDao = new MediumDao();
-                medium.addConsultation(consultation);
-                mediumDao.modifier(medium);
+            try {
 
-                // add consultation to client
-                client = consultation.getClient();
-                client.addConsultation(consultation);
-                clientDao.modifier(client);
+                JpaUtil.creerContextePersistance();
+                JpaUtil.ouvrirTransaction();
 
-                // add employee to consultation
-                consultation.setEmploye(emp);
-                consultationDao.creer(consultation);
-                //System.out.println("Consultation cree");
+                char medium_gender = medium.getGenre();
 
-                JpaUtil.validerTransaction();
-                Logger.getAnonymousLogger().log(Level.INFO, "succès");
-            } else {
+                Employe emp = employeDao.chercherEmployeDispo(medium_gender);
+
+                if (emp != null) {
+
+                    // add consultation to employee
+                    emp.addConsultation(consultation);
+                    emp.setDisponible(false);
+                    employeDao.modifier(emp);
+
+                    // add consultation to medium
+                    MediumDao mediumDao = new MediumDao();
+                    medium.addConsultation(consultation);
+                    mediumDao.modifier(medium);
+
+                    // add consultation to client
+                    client = consultation.getClient();
+                    client.addConsultation(consultation);
+                    clientDao.modifier(client);
+
+                    // add employee to consultation
+                    consultation.setEmploye(emp);
+                    consultationDao.creer(consultation);
+                    //System.out.println("Consultation cree");
+
+                    JpaUtil.validerTransaction();
+                    Logger.getAnonymousLogger().log(Level.INFO, "succès");
+                } else {
+                    consultation = null;
+                }
+
+
+            } catch (Exception e) {
+                Logger.getAnonymousLogger().log(Level.SEVERE, "Erreur creation consultation !");
+                System.out.println(e.getMessage());
+                JpaUtil.annulerTransaction();
                 consultation = null;
-            }
-            
-            
-        } catch (Exception e) {
-            Logger.getAnonymousLogger().log(Level.SEVERE, "Erreur creation consultation !");
-            System.out.println(e.getMessage());
-            JpaUtil.annulerTransaction();
-            consultation = null;
-        } finally {
-            JpaUtil.fermerContextePersistance();
+            } finally {
+                JpaUtil.fermerContextePersistance();
+            }  
         }
+        
         return consultation;
     }
     
-    public void commencerConsultation(Consultation consultation) {
+    public boolean commencerConsultation(Consultation consultation) {
         
-        consultation.setDate_debut(new Date());
-        ConsultationDao consultationDao = new ConsultationDao();
+        boolean started = false;
         
-        try {
-            JpaUtil.creerContextePersistance();
-            JpaUtil.ouvrirTransaction();
-            consultationDao.modifier(consultation);
-            JpaUtil.validerTransaction();
-            Message.envoyerNotification(consultation.getClient().getTelephone(),
-                "Numéro à appeler : " + consultation.getEmploye().getTelephone());
-            Logger.getAnonymousLogger().log(Level.INFO, "succès");
-        } catch (Exception e) {
-            Logger.getAnonymousLogger().log(Level.SEVERE, "Erreur !");
-            e.printStackTrace(); 
-            JpaUtil.annulerTransaction();
-        } finally {
-            JpaUtil.fermerContextePersistance();
+        if (consultation != null) {
+            consultation.setDate_debut(new Date());
+            ConsultationDao consultationDao = new ConsultationDao();
+
+            try {
+                JpaUtil.creerContextePersistance();
+                JpaUtil.ouvrirTransaction();
+                consultationDao.modifier(consultation);
+                JpaUtil.validerTransaction();
+                Message.envoyerNotification(consultation.getClient().getTelephone(),
+                    "Numéro à appeler : " + consultation.getEmploye().getTelephone());
+                Logger.getAnonymousLogger().log(Level.INFO, "succès");
+                started = true;
+            } catch (Exception e) {
+                Logger.getAnonymousLogger().log(Level.SEVERE, "Erreur !");
+                e.printStackTrace(); 
+                JpaUtil.annulerTransaction();
+            } finally {
+                JpaUtil.fermerContextePersistance();
+            }
         }
-       
+        
+        return started;
+        
     }
     
-    public void terminerConsultation(Consultation consultation, String commentaire) {
+    public boolean terminerConsultation(Consultation consultation, String commentaire) {
 
-        Employe emp = consultation.getEmploye();   
-        ConsultationDao consultationDao = new ConsultationDao();
-        EmployeDao employeDao = new EmployeDao();
+        boolean finished = false;
         
-        try {
-            
-            if (consultation.getDate_debut() == null) {
-                throw new IllegalArgumentException("Consultation pas encore commencee");
+        if (consultation != null) {
+            Employe emp = consultation.getEmploye();   
+            ConsultationDao consultationDao = new ConsultationDao();
+            EmployeDao employeDao = new EmployeDao();
+
+            try {
+
+                if (consultation.getDate_debut() == null) {
+                    throw new IllegalArgumentException("Consultation pas encore commencee");
+                }
+
+                if (consultation.getDate_fin() != null) {
+                    throw new IllegalArgumentException("Consultation pas encore commencee");
+                }
+
+                emp.setDisponible(true);
+                consultation.setDate_fin(new Date());
+                consultation.setCommentaire(commentaire);
+
+                JpaUtil.creerContextePersistance();
+                JpaUtil.ouvrirTransaction();
+                consultationDao.modifier(consultation); // update consultation
+                employeDao.modifier(emp); // update employe
+                JpaUtil.validerTransaction();
+                Logger.getAnonymousLogger().log(Level.INFO, "succès");
+                finished = true;
+            } catch (Exception e) {
+                Logger.getAnonymousLogger().log(Level.SEVERE, "Erreur !");
+                e.printStackTrace(); 
+                JpaUtil.annulerTransaction();
+            } finally {
+                JpaUtil.fermerContextePersistance();
             }
-            
-            if (consultation.getDate_fin() != null) {
-                throw new IllegalArgumentException("Consultation pas encore commencee");
-            }
-            
-            emp.setDisponible(true);
-            consultation.setDate_fin(new Date());
-            consultation.setCommentaire(commentaire);
-            
-            JpaUtil.creerContextePersistance();
-            JpaUtil.ouvrirTransaction();
-            consultationDao.modifier(consultation); // update consultation
-            employeDao.modifier(emp); // update employe
-            JpaUtil.validerTransaction();
-            Logger.getAnonymousLogger().log(Level.INFO, "succès");
-        } catch (Exception e) {
-            Logger.getAnonymousLogger().log(Level.SEVERE, "Erreur !");
-            e.printStackTrace(); 
-            JpaUtil.annulerTransaction();
-        } finally {
-            JpaUtil.fermerContextePersistance();
         }
-       
+        
+        return finished;
+
     }
     
     public Utilisateur authentifierUtilisateur(String mail, String motDePasse) {
@@ -287,43 +307,30 @@ public class Service {
     
     public void initialisationDonneesEmployes() {
         
-        // Create Employees
-        List<Employe> employees = new ArrayList<Employe>();
-        employees.add(new Employe("Pierre", "Paul", 'M', "pierre.paul@insa-lyon.fr", "password_secure", "0645897878", true));
-        employees.add(new Employe("Jean", "Marie", 'M', "jean.marie@insa-lyon.fr", "r3llY_sTr0ng", "0778784512", true));
-        employees.add(new Employe("Marie", "Mathilde", 'F', "marie.mathilde@insa-lyon.fr", "1234batman", "0450122356", true));
-        for (Employe emp : employees) {
-            inscrireEmploye(emp);
-        }
-        
+        // Create Employe
+        inscrireEmploye("Pierre", "Paul", 'M', "pierre.paul@insa-lyon.fr", "password_secure", "0645897878", true);
+        inscrireEmploye("Jean", "Marie", 'M', "jean.marie@insa-lyon.fr", "r3llY_sTr0ng", "0778784512", true);
+        inscrireEmploye("Marie", "Mathilde", 'F', "marie.mathilde@insa-lyon.fr", "1234batman", "0450122356", true);
+
         // Create Spirites
-        List<Spirite> spirites = new ArrayList<Spirite>();
-        spirites.add(new Spirite("Bruce Wayne", 'M', "Je résouds vos problèmes avec la justice", "Batmobile"));
-        spirites.add(new Spirite("Stephane Ricco", 'M', "Simple, efficace", "Boule de crystal"));
-        for (Spirite spirite : spirites) {
-            inscrireSpirite(spirite);
-        }
+        inscrireSpirite("Bruce Wayne", 'M', "Je résouds vos problèmes avec la justice", "Batmobile");
+        inscrireSpirite("Stephane Ricco", 'M', "Simple, efficace", "Boule de crystal");
         
         // Create Astrologues
-        List<Astrologue> astrologues = new ArrayList<Astrologue>();
-        astrologues.add(new Astrologue("Marie Space", 'F', "Vers l'infini et l'au-dela", 2000, "DUT Espace"));
-        astrologues.add(new Astrologue("Laurine Pesquet", 'F', "Je retourne l'espace", 2010, "DUT Arnaqueuse"));
-        for (Astrologue astrologue : astrologues) {
-            inscrireAstrologue(astrologue);
-        }
+        inscrireAstrologue("Marie Space", 'F', "Vers l'infini et l'au-dela", 2000, "DUT Espace");
+        inscrireAstrologue("Laurine Pesquet", 'F', "Je retourne l'espace", 2010, "DUT Arnaqueuse");
         
         // Create Cartomanciens
-        List<Cartomancien> cartomanciens = new ArrayList<Cartomancien>();
-        cartomanciens.add(new Cartomancien("Lutti Lutti", 'M', "Top deck ton avenir"));
-        cartomanciens.add(new Cartomancien("Best Marmotte", 'M', "Toujours les bonnes paires"));
-        for (Cartomancien cartomancien : cartomanciens) {
-            inscrireCartomancien(cartomancien);
-        }
+        inscrireCartomancien("Lutti Lutti", 'M', "Top deck ton avenir");
+        inscrireCartomancien("Best Marmotte", 'M', "Toujours les bonnes paires");
         
     }
     
-    public Employe inscrireEmploye(Employe employe) {
+    public Employe inscrireEmploye(String nom, String prenom, char genre, 
+            String mail, String motdepasse, String telephone, boolean disponible) {
              
+        Employe employe = new Employe(nom, prenom, genre, mail, motdepasse, telephone, disponible);
+         
         EmployeDao employeDao = new EmployeDao();
         try {
             JpaUtil.creerContextePersistance();
@@ -341,8 +348,11 @@ public class Service {
         return employe;
     }
     
-    public Spirite inscrireSpirite(Spirite spirite) {
-             
+    public Spirite inscrireSpirite(String denomination, char genre,
+            String presentation, String support) {
+        
+        Spirite spirite = new Spirite(denomination, genre, presentation, support);
+        
         SpiriteDao spiriteDao = new SpiriteDao();
         try {
             JpaUtil.creerContextePersistance();
@@ -360,8 +370,12 @@ public class Service {
         return spirite;
     }
     
-    public Cartomancien inscrireCartomancien(Cartomancien cartomancien) {
-             
+    public Cartomancien inscrireCartomancien(String denomination, char genre,
+            String presentation) {
+
+        Cartomancien cartomancien = new Cartomancien(denomination, genre, 
+            presentation);
+        
         CartomancienDao cartomancienDao = new CartomancienDao();
         try {
             JpaUtil.creerContextePersistance();
@@ -379,8 +393,12 @@ public class Service {
         return cartomancien;
     }
     
-    public Astrologue inscrireAstrologue(Astrologue astrologue) {
-             
+    public Astrologue inscrireAstrologue(String denomination, char genre,
+            String presentation, int promotion, String formation) {
+        
+        Astrologue astrologue = new Astrologue(denomination, genre,
+                presentation, promotion, formation);
+        
         AstrologueDao astrologueDao = new AstrologueDao();
         try {
             JpaUtil.creerContextePersistance();

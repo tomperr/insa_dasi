@@ -5,6 +5,7 @@
  */
 package dasi.dasi_projet.metier.modele;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
@@ -80,4 +81,16 @@ public class Medium {
         }
     }
     
+    // Constructors
+    
+    public Medium() {
+        this.consultations = new ArrayList<Consultation>();
+    }
+    
+    public Medium(String denomination, char gender, String presentation) {
+        this.denomination = denomination;
+        this.genre = gender;
+        this.presentation = presentation;
+        this.consultations = new ArrayList<Consultation>();
+    }
 }

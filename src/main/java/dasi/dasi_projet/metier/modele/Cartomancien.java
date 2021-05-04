@@ -23,10 +23,7 @@ public class Cartomancien extends Medium {
     
     public Cartomancien(String _denomination, char _genre,
             String _presentation) {
-        this.denomination = _denomination;
-        this.genre = _genre;
-        this.presentation = _presentation;
-        this.consultations = new ArrayList<Consultation>();
+        super(_denomination, _genre, _presentation);
     }
    
     @Override

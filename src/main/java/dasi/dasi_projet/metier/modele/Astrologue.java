@@ -47,12 +47,9 @@ public class Astrologue extends Medium {
     
     public Astrologue(String _denomination, char _genre,
             String _presentation, int _promotion, String _formation) {
-        this.denomination = _denomination;
-        this.genre = _genre;
-        this.presentation = _presentation;
+        super(_denomination, _genre, _presentation);
         this.promotion = _promotion;
         this.formation = _formation;
-        this.consultations = new ArrayList<Consultation>();
     }
     
     @Override

@@ -37,11 +37,8 @@ public class Spirite extends Medium {
     
     public Spirite(String _denomination, char _genre, String _presentation,
             String support) {
-        this.denomination = _denomination;
-        this.genre = _genre;
-        this.presentation = _presentation;
+        super(_denomination, _genre, _presentation);
         this.support = support;
-        this.consultations = new ArrayList<Consultation>();
     }
     
     @Override

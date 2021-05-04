@@ -117,15 +117,12 @@ public class Main {
         
         Service service = new Service();
         
-        Employe emp = new Employe(last_name, first_name, gender, email, pass,
+        Employe emp = service.inscrireEmploye(last_name, first_name, gender, email, pass,
                 phone, true);
-        Employe emp_return;
-        emp_return = service.inscrireEmploye(emp);
-        if (emp_return == null) {
+        if (emp == null) {
             System.out.println("> Echec création");
         } else {
             System.out.println("> Succès création");
-            emp = emp_return;
             System.out.println(emp);
         }
     }
@@ -150,42 +147,33 @@ public class Main {
             switch (option) {
                 case 0: break;
                 case 1:
-                    Spirite spirite = new Spirite(denomination, genre,
+                    Spirite spirite = service.inscrireSpirite(denomination, genre,
                             presentation, support);
-                    Spirite spirite_return;
-                    spirite_return = service.inscrireSpirite(spirite);
-                    if (spirite_return == null) {
+                    if (spirite == null) {
                         System.out.println("> Echec création");
                     } else {
                         System.out.println("> Succès création");
-                        spirite = spirite_return;
                         System.out.println(spirite);
                     }
                     break;
                 case 2:
-                    
-                    Cartomancien cartomancien = new Cartomancien(denomination, genre,
-                            presentation);
-                    Cartomancien cartomancien_return;
-                    cartomancien_return = service.inscrireCartomancien(cartomancien);
-                    if (cartomancien_return == null) {
+                    Cartomancien cartomancien = service.inscrireCartomancien(denomination,
+                            genre, presentation);
+                    if (cartomancien == null) {
                         System.out.println("> Echec création");
                     } else {
                         System.out.println("> Succès création");
-                        cartomancien = cartomancien_return;
                         System.out.println(cartomancien);
                     }
                     break;
                 case 3:
-                    Astrologue astrologue = new Astrologue(denomination, genre,
-                            presentation, promotion, formation);
-                    Astrologue astrologue_return;
-                    astrologue_return = service.inscrireAstrologue(astrologue);
-                    if (astrologue_return == null) {
+
+                    Astrologue astrologue = service.inscrireAstrologue(denomination,
+                            genre, presentation, promotion, formation);
+                    if (astrologue == null) {
                         System.out.println("> Echec création");
                     } else {
                         System.out.println("> Succès création");
-                        astrologue = astrologue_return;
                         System.out.println(astrologue);
                     }
                     break;
