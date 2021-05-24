@@ -214,14 +214,6 @@ public class Service {
 
             try {
 
-                if (consultation.getDate_debut() == null) {
-                    throw new IllegalArgumentException("Consultation pas encore commencee");
-                }
-
-                if (consultation.getDate_fin() != null) {
-                    throw new IllegalArgumentException("Consultation pas encore commencee");
-                }
-
                 emp.setDisponible(true);
                 consultation.setDate_fin(new Date());
                 consultation.setCommentaire(commentaire);
