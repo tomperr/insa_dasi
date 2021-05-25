@@ -279,8 +279,10 @@ public class Main {
         
         // init data
         Service service = new Service();
-        service.initialisationDonneesEmployes();
-        service.initialisationDonneesClients();
+        //service.initialisationDonneesEmployes();
+        //service.initialisationDonneesClients();
+        
+        service.initDataPresentation();
         
         int option = -1;
         while (option != 0) {

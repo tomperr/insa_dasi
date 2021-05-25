@@ -45,6 +45,77 @@ import java.util.Comparator;
  */
 public class Service {
     
+    public void initDataPresentation()  throws ParseException, IOException {
+        
+        // Create Clients
+        Client client1 = inscrireClient("Tom", "PERR", 'M', "tom.perr@insa-lyon.fr",
+            "tomperr", "0645788956", "08/03/2000",
+            "12 rue de l'INSA");
+        
+        Client client2 = inscrireClient("Baptiste", "EDOUARD", 'M', "baptiste.edouard@insa-lyon.fr",
+            "baptisteedouard", "0612562332", "02/02/2001",
+            "33c rue des enfants");
+        
+        // Create Employe
+        Employe emp1 = inscrireEmploye("Jean", "Marie", 'M', "jean.marie@insa-lyon.fr", "jeanmarie", "0778784512", true);
+        Employe emp2 = inscrireEmploye("Marie", "Mathilde", 'F', "marie.mathilde@insa-lyon.fr", "mariemathilde", "0450122356", true);
+
+        // Create Spirites
+        Spirite spirite1 = inscrireSpirite("Bruce Wayne", 'M', "Je résouds vos problèmes avec la justice", "Batmobile");
+        Spirite spirite2 = inscrireSpirite("Stephane Ricco", 'M', "Simple, efficace", "Boule de crystal");
+        
+        // Create Astrologues
+        Astrologue astro1 = inscrireAstrologue("Marie Space", 'F', "Vers l'infini et l'au-dela", 2000, "DUT Espace");
+        Astrologue astro2 = inscrireAstrologue("Laurine Pesquet", 'F', "Je retourne l'espace", 2010, "DUT Arnaqueuse");
+        
+        // Create Cartomanciens
+        Cartomancien cart1 = inscrireCartomancien("Lutti Lutti", 'M', "Top deck ton avenir");
+        Cartomancien cart2 = inscrireCartomancien("Best Marmotte", 'M', "Toujours les bonnes paires");
+        
+        // Create consultation
+        Consultation cons1 = demanderConsultation(client1, spirite1);
+        cons1 = rechercherConsultation(11);
+        commencerConsultation(cons1);
+        cons1 = rechercherConsultation(11);
+        terminerConsultation(cons1, "Super client !");
+        
+        client1 = rechercherClient(1);
+        Consultation cons2 = demanderConsultation(client1, spirite2);
+        cons2 = rechercherConsultation(12);
+        commencerConsultation(cons2);
+        cons2 = rechercherConsultation(12);
+        terminerConsultation(cons2, "Bon feeling :)");
+        
+        client1 = rechercherClient(1);
+        Consultation cons3 = demanderConsultation(client1, cart2);
+        cons3 = rechercherConsultation(13);
+        commencerConsultation(cons3);
+        cons3 = rechercherConsultation(13);
+        terminerConsultation(cons3, "Bonne séance");
+        
+        Consultation cons4 = demanderConsultation(client2, astro1);
+        cons4 = rechercherConsultation(14);
+        commencerConsultation(cons4);
+        cons4 = rechercherConsultation(14);
+        terminerConsultation(cons4, "Bon feeling :)");
+        
+        client2 = rechercherClient(2);
+        Consultation cons5 = demanderConsultation(client2, astro2);
+        cons5 = rechercherConsultation(15);
+        commencerConsultation(cons5);
+        cons5 = rechercherConsultation(15);
+        terminerConsultation(cons5, "Bonne séance");
+        
+        client2 = rechercherClient(2);
+        Consultation cons6 = demanderConsultation(client2, cart1);
+        cons6 = rechercherConsultation(16);
+        commencerConsultation(cons6);
+        cons6 = rechercherConsultation(16);
+        terminerConsultation(cons6, "Super client !");
+        
+        
+    }
+    
     public void initialisationDonneesClients() throws ParseException, IOException {
         
         // Create Clients
@@ -53,11 +124,11 @@ public class Service {
         SimpleDateFormat sf = new SimpleDateFormat("dd/MM/yyyy");
         
         inscrireClient("Tom", "PERR", 'M', "tom.perr@insa-lyon.fr",
-            "password_hard", "0645788956", "08/03/2000",
+            "tomperr", "0645788956", "08/03/2000",
             "12 rue de l'INSA");
         
         inscrireClient("Baptiste", "EDOUARD", 'M', "baptiste.edouard@insa-lyon.fr",
-            "edd_02022001", "0612562332", "02/02/2001",
+            "baptisteedouard", "0612562332", "02/02/2001",
             "33c rue des enfants");
 
     }
@@ -300,9 +371,8 @@ public class Service {
     public void initialisationDonneesEmployes() {
         
         // Create Employe
-        inscrireEmploye("Pierre", "Paul", 'M', "pierre.paul@insa-lyon.fr", "password_secure", "0645897878", true);
-        inscrireEmploye("Jean", "Marie", 'M', "jean.marie@insa-lyon.fr", "r3llY_sTr0ng", "0778784512", true);
-        inscrireEmploye("Marie", "Mathilde", 'F', "marie.mathilde@insa-lyon.fr", "1234batman", "0450122356", true);
+        inscrireEmploye("Jean", "Marie", 'M', "jean.marie@insa-lyon.fr", "jeanmarie", "0778784512", true);
+        inscrireEmploye("Marie", "Mathilde", 'F', "marie.mathilde@insa-lyon.fr", "mariemathilde", "0450122356", true);
 
         // Create Spirites
         inscrireSpirite("Bruce Wayne", 'M', "Je résouds vos problèmes avec la justice", "Batmobile");
