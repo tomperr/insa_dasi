@@ -11,6 +11,7 @@ import dasi.dasi_projet.metier.modele.Employe;
 import dasi.dasi_projet.metier.modele.Utilisateur;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
+import javax.persistence.Query;
 import java.util.*;
 
 /**
@@ -62,6 +63,31 @@ public class EmployeDao {
             emp = null;
         }
         return emp;
+    }
+    
+    public Map<String,Integer> tousAvecNombreClientsDifferent()
+    {
+        Map<String,Integer> statistiques = new HashMap<String,Integer>();
+        
+        String s = "SELECT e.nom, e.prenom, count(DISTINCT cl.id) "
+                + "FROM Employe e "
+                + "LEFT JOIN e.consultations co "
+                + "LEFT JOIN co.client cl "
+                + "GROUP BY e.nom, e.prenom";
+        
+        Query query = JpaUtil.obtenirContextePersistance().createQuery(s);
+        
+        List<Object[]> results = query.getResultList();
+        
+        if(results != null)
+        {
+            for(Object[] row : results)
+            {
+                statistiques.put(row[0] + " " + row[1], Math.toIntExact((long) row[2]));
+            }
+        }
+        
+        return statistiques;
     }
     
 }

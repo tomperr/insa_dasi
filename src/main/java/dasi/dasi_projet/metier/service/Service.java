@@ -541,4 +541,26 @@ public class Service {
         
     }
     
+    public Map<String,Integer> calculerRepartitionClientsParEmployes()
+    {
+        Map<String,Integer> statistiques = new HashMap<String,Integer>();
+        EmployeDao employeDao = new EmployeDao();
+        try
+        {
+            JpaUtil.creerContextePersistance();
+            statistiques = employeDao.tousAvecNombreClientsDifferent();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            JpaUtil.fermerContextePersistance();
+        }
+        
+        return statistiques;
+    }
+
+    
 }
